@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  contacts-api:
+    container_name: contacts-api
+    build:
+      context: '.'
+      args:
+        - APP_ENV=development
+        - COMPOSER_NO_INTERACTION=0
+    image: contacts-api
+    ports:
+      - 802:80
+    volumes:
+      - ./app:/app
+    environment:
+      - LOG_STDOUT=/dev/null
+      - LOG_STDERR=/dev/null
+  contacts-api-db:
+    container_name: contacts-api-db
+    image: mysql:8.0
+    ports:
+      - 33062:3306
+    environment:
+      - MYSQL_DATABASE=contacts_api
+      - MYSQL_ROOT_PASSWORD=pass
+    volumes:
+      - ./data/mysql:/var/lib/mysql:rw
+      - ./data/log:/var/log/mysql:rw
+    command: "--innodb_use_native_aio=0"

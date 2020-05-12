@@ -1,0 +1,123 @@
+#!/bin/bash -e
+
+APP_NAME='contacts-api'
+
+LIST_OF_UNIX_FILES=(
+  "/usr/bin/cs"
+  "/usr/bin/edit"
+  "/usr/bin/unit"
+#  "/usr/bin/symfony"
+  "/etc/mc/mc.keymap"
+)
+
+run_unix_files_formatter() {
+  if [ "$OSTYPE" == "msys" ]; then
+    for FILE in "${LIST_OF_UNIX_FILES[@]}"
+    do
+       docker exec -ti "$APP_NAME" bash -c "sed -i -e 's/\r$//' $FILE"
+    done
+  fi
+}
+
+if [ -z "$1" ]; then
+
+  echo "
+Docker arguments:
+  ${0} up     - run app
+  ${0} exec   - exec to $APP_NAME
+  ${0} ps     - docker ps -a
+  ${0} down   - stop app
+  ${0} build  - rebuild project
+  ${0} clear  - clear data folder (may need to be run with sudo on Linux)
+  ${0} fix    - fix unix files when running docker from windows
+
+Testing arguments:
+  ${0} test             - run full test (cs && unit)
+  ${0} cs               - run Code Standard tests
+  ${0} cs fix           - run code autofix
+  ${0} cs {dir}         - run Code Standard in exact directory
+  ${0} unit             - run paratest
+  ${0} unit {test_name} - run exact test class or test method
+  ${0} db               - check if DB is online
+"
+  exit
+
+elif [ "$1" == "up" ]; then
+
+  docker-compose down
+  docker-compose up -d
+#  docker exec -ti "$APP_NAME" bash -c "composer install"
+
+  run_unix_files_formatter
+
+#  check_db
+#  if [ "$DB_STATUS" == "1" ]; then
+#    docker exec -ti "$APP_NAME" bash -c "doctrine:migrations:migrate"
+#  else
+#    echo "Please run migration manually."
+#  fi
+
+elif [ "$1" == "exec" ]; then
+  docker exec -ti "$APP_NAME" bash
+elif [ "$1" == "ps" ]; then
+  docker ps -a
+elif [ "$1" == "build" ]; then
+
+  docker-compose down
+  docker-compose up --build -d
+#  docker exec -ti "$APP_NAME" bash -c "composer install"
+
+  run_unix_files_formatter
+
+#  check_db
+#  if [ "$DB_STATUS" == "1" ]; then
+#    docker exec -ti "$APP_NAME" bash -c "doctrine:migrations:migrate"
+#  else
+#    echo "Please run migration manually."
+#  fi
+
+elif [ "$1" == "clear" ]; then
+
+  APP_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/data"
+
+  STRUCTURE=(
+    "mysql"
+    "log"
+  )
+
+  for FILE in "$APP_PATH"/*; do
+    echo "Removing "$FILE;
+    /bin/rm -rf "$FILE"
+  done;
+
+  for DIR in "${STRUCTURE[@]}"; do
+    echo "Creating dir" "$DIR";
+    /bin/mkdir "$APP_PATH"/"$DIR"
+    /bin/chmod 0777 "$APP_PATH"/"$DIR"
+    > "$APP_PATH"/"$DIR"/.gitkeep
+  done
+
+elif [ "$1" == "down" ]; then
+  docker-compose down
+elif [ "$1" == "cs" ] && [ -z "$2" ]; then
+  docker exec -ti "$APP_NAME" bash -c "cs"
+elif [ "$1" == "cs" ]; then
+  docker exec -ti "$APP_NAME" bash -c "cs $2"
+elif [ "$1" == "unit" ] && [ -z "$2" ]; then
+  docker exec -ti "$APP_NAME" bash -c "unit"
+elif [ "$1" == "unit" ]; then
+  docker exec -ti "$APP_NAME" bash -c "unit $2"
+elif [ "$1" == "test" ]; then
+  docker exec -ti "$APP_NAME" bash -c "cs && unit"
+elif [ "$1" == "fix" ]; then
+  run_unix_files_formatter
+elif [ "$1" == "db" ]; then
+  check_db
+  if [ "$DB_STATUS" == "1" ]; then
+    echo "DB is online"
+  else
+    echo "Couldn't access DB :("
+  fi
+else
+  echo "Argument \"$1\" not found"
+fi
