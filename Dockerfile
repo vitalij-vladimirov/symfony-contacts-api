@@ -19,9 +19,9 @@ COPY .config/composer/composer_1.10.6.phar /usr/local/bin/composer
 
 # Create additional /usr/bin/ commands
 COPY .config/usr_bin/* /usr/bin/
-RUN chmod +x /usr/bin/edit /usr/bin/cs /usr/bin/unit /usr/bin/symfony
+RUN chmod +x /usr/bin/edit /usr/bin/symfony
 
 # Run APP
 COPY --chown=www-data:www-data app /app
 WORKDIR /app
-#RUN if [ "$APP_ENV" = "development" ]; then composer install; else composer install --no-dev --optimize-autoloader; fi
+RUN if [ "$APP_ENV" = "development" ]; then composer install; else composer install --no-dev --optimize-autoloader; fi
