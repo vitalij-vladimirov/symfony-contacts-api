@@ -5,6 +5,7 @@ APP_NAME='contacts-api'
 LIST_OF_UNIX_FILES=(
   "/usr/bin/edit"
   "/etc/mc/mc.keymap"
+  "/app/bin/cs"
   "/opt/docker/etc/nginx/vhost.common.d/10-location-root.conf"
 )
 

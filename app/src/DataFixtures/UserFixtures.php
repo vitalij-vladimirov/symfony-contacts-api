@@ -21,7 +21,7 @@ class UserFixtures extends Fixture
     {
         $user = (new User())
             ->setPhoneNr(37067865953)
-            ->setRoles([])
+            ->setRoles(['ROLE_USER'])
         ;
 
         $user->setPassword($this->passwordEncoder->encodePassword(

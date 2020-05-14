@@ -66,6 +66,7 @@ final class Version20200512205541 extends AbstractMigration
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 INDEX IDX_79FB25036061F7CF (sender_id),
                 INDEX IDX_79FB2503BE20CAB0 (receiver_id),
+                INDEX IDX_79FB2503C52AB374 (status),
                 PRIMARY KEY(id)
             )
             DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
