@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use DateTimeImmutable;
 
@@ -20,38 +21,38 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="bigint", length=15, unique=true)
      */
-    private $phoneNr;
+    private int $phoneNr;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
     * @ORM\Column(type="string", unique=true, nullable=true)
     */
-    private $apiToken;
+    private string $apiToken;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="user_id", orphanRemoval=true)
@@ -124,7 +125,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return (string) $this->password;
     }
@@ -139,9 +140,9 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getApiToken(): string
+    public function getApiToken(): ?string
     {
-        return (string) $this->apiToken;
+        return $this->apiToken;
     }
 
     public function setApiToken(string $apiToken): self
@@ -235,7 +236,7 @@ class User implements UserInterface
     {
         if (!$this->sharedRequests->contains($sharedRequest)) {
             $this->sharedRequests[] = $sharedRequest;
-            $sharedRequest->setSenderId($this);
+            $sharedRequest->setSender($this);
         }
 
         return $this;
@@ -247,7 +248,7 @@ class User implements UserInterface
             $this->sharedRequests->removeElement($sharedRequest);
             // set the owning side to null (unless already changed)
             if ($sharedRequest->getSenderId() === $this) {
-                $sharedRequest->setSenderId(null);
+                $sharedRequest->setSender(null);
             }
         }
 
@@ -266,7 +267,7 @@ class User implements UserInterface
     {
         if (!$this->receivedRequests->contains($receivedRequest)) {
             $this->receivedRequests[] = $receivedRequest;
-            $receivedRequest->setReceiverId($this);
+            $receivedRequest->setReceiver($this);
         }
 
         return $this;
@@ -277,8 +278,8 @@ class User implements UserInterface
         if ($this->receivedRequests->contains($receivedRequest)) {
             $this->receivedRequests->removeElement($receivedRequest);
             // set the owning side to null (unless already changed)
-            if ($receivedRequest->getReceiverId() === $this) {
-                $receivedRequest->setReceiverId(null);
+            if ($receivedRequest->getReceive() === $this) {
+                $receivedRequest->setReceiver(null);
             }
         }
 

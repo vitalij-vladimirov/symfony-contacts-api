@@ -17,45 +17,45 @@ class Contact
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private User $user;
 
     /**
      * @ORM\Column(type="bigint")
      */
-    private $phoneNr;
+    private int $phoneNr;
 
     /**
      * @ORM\Column(type="string", length=55)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUserId(): ?user
+    public function getUserId(): ?User
     {
         return $this->user;
     }
 
-    public function setUserId(?user $user): self
+    public function setUserId(User $user): self
     {
         $this->user = $user;
 

@@ -36,7 +36,7 @@ final class Version20200516115857 extends AbstractMigration
                 phone_nr BIGINT NOT NULL,
                 roles JSON NOT NULL,
                 password VARCHAR(255) NOT NULL,
-                api_token VARCHAR(255) DEFAULT NULL,
+                api_token VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 UNIQUE INDEX UNIQ_8D93D64980E6005D (phone_nr),

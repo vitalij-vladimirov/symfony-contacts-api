@@ -100,15 +100,15 @@ class UserFixtures extends Fixture
         $manager = clone $this->manager;
 
         foreach ($users as $user) {
-            $shareCount = random_int(1, 10);
+            $shareCount = random_int(1, 20);
 
             $contacts = $this->contactRepository->findAll();
 
             $totalRequests = 0;
             foreach ($contacts as $contact) {
                 $shareRequest = (new ShareRequest())
-                    ->setSenderId($user)
-                    ->setReceiverId($this->getRandomObject($users, $user))
+                    ->setSender($user)
+                    ->setReceiver($this->getRandomObject($users, $user))
                     ->setPhoneNr($contact->getPhoneNr())
                     ->setName($contact->getName())
                     ->setStatus($this->getRandomObject(ShareRequest::STATUS_LIST))

@@ -29,68 +29,68 @@ class ShareRequest
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="SharedRequests")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sender;
+    private User $sender;
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="receivedRequests")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $receiver;
+    private User $receiver;
 
     /**
      * @ORM\Column(type="bigint")
      */
-    private $phoneNr;
+    private int $phoneNr;
 
     /**
      * @ORM\Column(type="string", length=55)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=10)
      */
-    private $status;
+    private string $status;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSenderId(): ?user
+    public function getSender(): ?User
     {
         return $this->sender;
     }
 
-    public function setSenderId(?user $sender): self
+    public function setSender(User $sender): self
     {
         $this->sender = $sender;
 
         return $this;
     }
 
-    public function getReceiverId(): ?user
+    public function getReceiver(): ?User
     {
         return $this->receiver;
     }
 
-    public function setReceiverId(?user $receiver): self
+    public function setReceiver(User $receiver): self
     {
         $this->receiver = $receiver;
 
