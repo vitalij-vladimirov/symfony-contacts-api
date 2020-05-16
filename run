@@ -5,6 +5,7 @@ APP_NAME='contacts-api'
 LIST_OF_UNIX_FILES=(
   "/usr/bin/edit"
   "/etc/mc/mc.keymap"
+  "/app/bin/cs"
   "/opt/docker/etc/nginx/vhost.common.d/10-location-root.conf"
 )
 
@@ -39,13 +40,6 @@ elif [ "$1" == "up" ]; then
 
   run_unix_files_formatter
 
-#  check_db
-#  if [ "$DB_STATUS" == "1" ]; then
-#    docker exec -ti "$APP_NAME" bash -c "doctrine:migrations:migrate"
-#  else
-#    echo "Please run migration manually."
-#  fi
-
 elif [ "$1" == "exec" ]; then
   docker exec -ti "$APP_NAME" bash
 elif [ "$1" == "ps" ]; then
@@ -57,13 +51,6 @@ elif [ "$1" == "build" ]; then
   docker exec -ti "$APP_NAME" bash -c "composer install"
 
   run_unix_files_formatter
-
-#  check_db
-#  if [ "$DB_STATUS" == "1" ]; then
-#    docker exec -ti "$APP_NAME" bash -c "doctrine:migrations:migrate"
-#  else
-#    echo "Please run migration manually."
-#  fi
 
 elif [ "$1" == "clear" ]; then
 

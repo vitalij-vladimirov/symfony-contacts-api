@@ -20,32 +20,47 @@ class ShareRequestRepository extends ServiceEntityRepository
         parent::__construct($registry, ShareRequest::class);
     }
 
-    // /**
-    //  * @return ShareRequest[] Returns an array of ShareRequest objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
+    /**
+     * @param int $senderId
+     * @param string $status
+     *
+     * @return ShareRequest[] Returns an array of ShareRequest objects
+     */
+    public function findBySenderIdAndStatus(
+        int $senderId,
+        string $status = ShareRequest::STATUS_CREATED
+    ) {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('s.sender_id = :senderId')
+            ->setParameter('senderId', $senderId)
+            ->andWhere('s.status = :status')
+            ->setParameter('status', $status)
             ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(100)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?ShareRequest
-    {
+    /**
+     * @param int $receiverId
+     * @param string $status
+     *
+     * @return ShareRequest[] Returns an array of ShareRequest objects
+     */
+    public function findByReceiverIdAndStatus(
+        int $receiverId,
+        string $status = ShareRequest::STATUS_CREATED
+    ) {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('s.receiver_id = :receiverId')
+            ->setParameter('receiverId', $receiverId)
+            ->andWhere('s.status = :status')
+            ->setParameter('status', $status)
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(100)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
 }

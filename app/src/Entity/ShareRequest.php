@@ -5,7 +5,7 @@ namespace App\Entity;
 
 use App\Repository\ShareRequestRepository;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 /**
  * @ORM\Entity(repositoryClass=ShareRequestRepository::class)
@@ -17,87 +17,94 @@ class ShareRequest
     public const STATUS_REJECTED = 'rejected';      // by receiver
     public const STATUS_CANCELLED = 'cancelled';    // by sender
 
+    public const STATUS_LIST = [
+        self::STATUS_CREATED,
+        self::STATUS_ACCEPTED,
+        self::STATUS_REJECTED,
+        self::STATUS_CANCELLED,
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="SharedRequests")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sender_id;
+    private User $sender;
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="receivedRequests")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $receiver_id;
+    private User $receiver;
 
     /**
      * @ORM\Column(type="bigint")
      */
-    private $phone_nr;
+    private int $phoneNr;
 
     /**
      * @ORM\Column(type="string", length=55)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=10)
      */
-    private $status;
+    private string $status;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+    private DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updated_at;
+    private DateTimeImmutable $updatedAt;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSenderId(): ?user
+    public function getSender(): ?User
     {
-        return $this->sender_id;
+        return $this->sender;
     }
 
-    public function setSenderId(?user $sender_id): self
+    public function setSender(User $sender): self
     {
-        $this->sender_id = $sender_id;
+        $this->sender = $sender;
 
         return $this;
     }
 
-    public function getReceiverId(): ?user
+    public function getReceiver(): ?User
     {
-        return $this->receiver_id;
+        return $this->receiver;
     }
 
-    public function setReceiverId(?user $receiver_id): self
+    public function setReceiver(User $receiver): self
     {
-        $this->receiver_id = $receiver_id;
+        $this->receiver = $receiver;
 
         return $this;
     }
 
-    public function getPhoneNr(): ?string
+    public function getPhoneNr(): ?int
     {
-        return $this->phone_nr;
+        return $this->phoneNr;
     }
 
-    public function setPhoneNr(string $phone_nr): self
+    public function setPhoneNr(int $phoneNr): self
     {
-        $this->phone_nr = $phone_nr;
+        $this->phoneNr = $phoneNr;
 
         return $this;
     }
@@ -126,26 +133,26 @@ class ShareRequest
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeInterface
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeInterface $created_at): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeInterface $updated_at): self
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

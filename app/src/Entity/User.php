@@ -7,8 +7,9 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -20,28 +21,38 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="bigint", length=15, unique=true)
      */
-    private $phone_nr;
+    private int $phoneNr;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
     * @ORM\Column(type="string", unique=true, nullable=true)
     */
-    private $apiToken;
+    private string $apiToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private DateTimeImmutable $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private DateTimeImmutable $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="user_id", orphanRemoval=true)
@@ -58,16 +69,6 @@ class User implements UserInterface
      */
     private $receivedRequests;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updated_at;
-
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -82,12 +83,12 @@ class User implements UserInterface
 
     public function getPhoneNr(): ?int
     {
-        return $this->phone_nr;
+        return $this->phoneNr;
     }
 
-    public function setPhoneNr(int $phone_nr): self
+    public function setPhoneNr(int $phoneNr): self
     {
-        $this->phone_nr = $phone_nr;
+        $this->phoneNr = $phoneNr;
 
         return $this;
     }
@@ -99,7 +100,7 @@ class User implements UserInterface
      */
     public function getUsername(): int
     {
-        return (int) $this->phone_nr;
+        return (int) $this->phoneNr;
     }
 
     /**
@@ -124,7 +125,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return (string) $this->password;
     }
@@ -139,14 +140,38 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getApiToken(): string
+    public function getApiToken(): ?string
     {
-        return (string) $this->apiToken;
+        return $this->apiToken;
     }
 
     public function setApiToken(string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -211,7 +236,7 @@ class User implements UserInterface
     {
         if (!$this->sharedRequests->contains($sharedRequest)) {
             $this->sharedRequests[] = $sharedRequest;
-            $sharedRequest->setSenderId($this);
+            $sharedRequest->setSender($this);
         }
 
         return $this;
@@ -223,7 +248,7 @@ class User implements UserInterface
             $this->sharedRequests->removeElement($sharedRequest);
             // set the owning side to null (unless already changed)
             if ($sharedRequest->getSenderId() === $this) {
-                $sharedRequest->setSenderId(null);
+                $sharedRequest->setSender(null);
             }
         }
 
@@ -242,7 +267,7 @@ class User implements UserInterface
     {
         if (!$this->receivedRequests->contains($receivedRequest)) {
             $this->receivedRequests[] = $receivedRequest;
-            $receivedRequest->setReceiverId($this);
+            $receivedRequest->setReceiver($this);
         }
 
         return $this;
@@ -253,34 +278,10 @@ class User implements UserInterface
         if ($this->receivedRequests->contains($receivedRequest)) {
             $this->receivedRequests->removeElement($receivedRequest);
             // set the owning side to null (unless already changed)
-            if ($receivedRequest->getReceiverId() === $this) {
-                $receivedRequest->setReceiverId(null);
+            if ($receivedRequest->getReceive() === $this) {
+                $receivedRequest->setReceiver(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
 
         return $this;
     }
