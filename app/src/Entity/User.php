@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -25,7 +25,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="bigint", length=15, unique=true)
      */
-    private $phone_nr;
+    private $phoneNr;
 
     /**
      * @ORM\Column(type="json")
@@ -44,6 +44,16 @@ class User implements UserInterface
     private $apiToken;
 
     /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $updatedAt;
+
+    /**
      * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="user_id", orphanRemoval=true)
      */
     private $contacts;
@@ -57,16 +67,6 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=ShareRequest::class, mappedBy="receiver_id")
      */
     private $receivedRequests;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updated_at;
 
     public function __construct()
     {
@@ -82,12 +82,12 @@ class User implements UserInterface
 
     public function getPhoneNr(): ?int
     {
-        return $this->phone_nr;
+        return $this->phoneNr;
     }
 
-    public function setPhoneNr(int $phone_nr): self
+    public function setPhoneNr(int $phoneNr): self
     {
-        $this->phone_nr = $phone_nr;
+        $this->phoneNr = $phoneNr;
 
         return $this;
     }
@@ -99,7 +99,7 @@ class User implements UserInterface
      */
     public function getUsername(): int
     {
-        return (int) $this->phone_nr;
+        return (int) $this->phoneNr;
     }
 
     /**
@@ -147,6 +147,30 @@ class User implements UserInterface
     public function setApiToken(string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -257,30 +281,6 @@ class User implements UserInterface
                 $receivedRequest->setReceiverId(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
 
         return $this;
     }
