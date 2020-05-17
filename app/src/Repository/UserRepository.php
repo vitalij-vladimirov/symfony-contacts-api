@@ -41,17 +41,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @param int $phoneNr
      *
-     * @return User[] Returns an array of User objects
+     * @return User Returns an array of User objects
      */
-    public function findByPhoneNr(int $phoneNr)
+    public function findOneByPhoneNr(int $phoneNr): ?User
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.phone_nr = :phoneNr')
+        $users = $this->createQueryBuilder('u')
+            ->andWhere('u.phoneNr = :phoneNr')
             ->setParameter('phoneNr', $phoneNr)
             ->orderBy('u.id', 'ASC')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult()
         ;
+
+        return count($users) === 1 ? $users[0] : null;
     }
 }
