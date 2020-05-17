@@ -10,6 +10,7 @@ use App\Service\UserManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 class UserController
 {
@@ -28,7 +29,10 @@ class UserController
      *     condition="context.getMethod() in ['GET']"
      * )
      *
+     * @param Request $request
+     *
      * @return JsonResponse
+     * @throws BadRequestApiException
      */
     public function getUserToken(Request $request): JsonResponse
     {
@@ -39,6 +43,11 @@ class UserController
         } catch (WrongUserCredentialsException $exception) {
             throw new BadRequestApiException(
                 $exception->getMessage(),
+                UserErrorCode::WRONG_USER_CREDENTIALS
+            );
+        } catch (Throwable $throwable) {
+            throw new BadRequestApiException(
+                'User credentials not found.',
                 UserErrorCode::WRONG_USER_CREDENTIALS
             );
         }

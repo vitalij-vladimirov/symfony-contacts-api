@@ -26,7 +26,7 @@ class ContactValidator
         return $contactValidation;
     }
 
-    public function validatePhoneNr($phoneNr = null, string $fieldName = 'name'): ConstraintViolationListInterface
+    public function validatePhoneNr($phoneNr = null, string $fieldName = 'phone_nr'): ConstraintViolationListInterface
     {
         $constraint = [
             new Constraints\NotNull([
