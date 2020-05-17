@@ -36,7 +36,7 @@ class ContactFixtures extends Fixture
 
                 $contact = (new Contact())
                     ->setPhoneNr($randomPhoneNr)
-                    ->setUserId($user)
+                    ->setUser($user)
                     ->setName($this->createRandomName())
                 ;
 
