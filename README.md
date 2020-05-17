@@ -1,4 +1,4 @@
-#Symfony API
+# Symfony API
 
 This is Docker based Symfony 5.0.8 app and MySQL 8.0 DB.
 
