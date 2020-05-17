@@ -11,12 +11,17 @@ This is Docker based Symfony 5.0.8 app and MySQL 8.0 DB.
 - Symfony 5.0.8
 - MySQL 8.0
 
-#### Run application
+#### First run
 
 - `./run up`
   - Runs `docker-compose up -d` (builds new image if not found).
   - Fixes difference of Docker EOL configuration between Windows and Unix/Mac.
-  - Runs migrations and seeds.
+- `./run migrate`
+  - Runs migration and fixtures for development purpose
+
+#### Next runs
+
+- `./run up`
 
 #### Stop application
 
@@ -54,12 +59,13 @@ This is Docker based Symfony 5.0.8 app and MySQL 8.0 DB.
 #### Other commands
 
 | Action | Inside container |
-| --- | --- | --- |
-| Run PHPUnit tests | `bin/test` |
+| --- | --- |
+| Run migration | `bin/console doctrine:migrations:migrate` |
+| Create fixtures | `bin/console doctrine:fixtures:load` |
+| Run PHPUnit tests | `bin/phpunit` |
 | Run Code Standard tests | `bin/cs` |
-| Run Code autofix `bin/cs fix` |
-| Run Code Standard in exact directory `bin/cs $dir` |
-| Fix unix files when running docker from windows | `./run fix` | - |
+| Run Code autofix | `bin/cs fix` |
+| Run Code Standard in exact directory | `bin/cs $dir` |
 
 #### If DB does not start
 
@@ -79,3 +85,7 @@ This is Docker based Symfony 5.0.8 app and MySQL 8.0 DB.
   - Use 'Docker Toolbox Terminal', 'Windows PowerShell' or 'GIT bash' to work with application. DO NOT USE Windows 'cmd'. Just don't do it.
   - If you prefer PHP Storm Terminal, configure it to use one of offered above terminals: `File > Settings > Tools > Terminal > Shell path > $pathToChoosenTerminal`.
   - There should be no additional problems when running app in 'Docker for Windows', but I couldn't test this platform yet so some unknown problems may occur. Be aware of that.
+
+#### Postman configs
+- `Symfony_contacts_api.postman_environment.json` - Postman environment configuration. Import it to Postman and token will be automatically renewed on after request to `/api/users/token` endpoint.
+- `Symfony_contacts_api.postman_collection.json` - Postman collection with all methods used in this API.

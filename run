@@ -22,13 +22,14 @@ if [ -z "$1" ]; then
 
   echo "
 Docker arguments:
-  ${0} up     - run app
-  ${0} exec   - exec to $APP_NAME
-  ${0} ps     - docker ps -a
-  ${0} down   - stop app
-  ${0} build  - rebuild project
-  ${0} fix    - fix unix files when running docker from windows
-  ${0} clear  - clear data folder (may need to be run with sudo on Linux)
+  ${0} up      - run app
+  ${0} migrate - run migration and load fixtures
+  ${0} exec    - exec to $APP_NAME
+  ${0} ps      - docker ps -a
+  ${0} down    - stop app
+  ${0} build   - rebuild project
+  ${0} fix     - fix unix files when running docker from windows
+  ${0} clear   - clear data folder (may need to be run with sudo on Linux)
 "
   exit
 
@@ -40,6 +41,9 @@ elif [ "$1" == "up" ]; then
 
   run_unix_files_formatter
 
+elif [ "$1" == "migrate" ]; then
+  docker exec -ti "$APP_NAME" bash -c "bin/console doctrine:migrations:migrate"
+  docker exec -ti "$APP_NAME" bash -c "bin/console doctrine:fixtures:load"
 elif [ "$1" == "exec" ]; then
   docker exec -ti "$APP_NAME" bash
 elif [ "$1" == "ps" ]; then
