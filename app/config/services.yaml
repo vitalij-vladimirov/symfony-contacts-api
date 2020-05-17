@@ -16,3 +16,9 @@ services:
     api_key_authenticator:
         class: App\Security\TokenAuthenticator
         arguments: ["@router"]
+
+    api_exception_subscriber:
+        class: App\EventListener\ApiExceptionSubscriber
+        arguments: []
+        tags:
+            - { name: kernel.event_subscriber }
