@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use DateTimeImmutable;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -46,25 +46,25 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private DateTimeImmutable $createdAt;
+    private DateTime $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private DateTimeImmutable $updatedAt;
+    private DateTime $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="user_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="user", orphanRemoval=true)
      */
     private $contacts;
 
     /**
-     * @ORM\OneToMany(targetEntity=ShareRequest::class, mappedBy="sender_id")
+     * @ORM\OneToMany(targetEntity=ShareRequest::class, mappedBy="sender")
      */
     private $sharedRequests;
 
     /**
-     * @ORM\OneToMany(targetEntity=ShareRequest::class, mappedBy="receiver_id")
+     * @ORM\OneToMany(targetEntity=ShareRequest::class, mappedBy="receiver")
      */
     private $receivedRequests;
 
@@ -99,7 +99,7 @@ class User implements UserInterface
      */
     public function getUsername(): int
     {
-        return (int) $this->phoneNr;
+        return $this->phoneNr;
     }
 
     /**
@@ -126,7 +126,7 @@ class User implements UserInterface
      */
     public function getPassword(): ?string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -151,24 +151,24 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -204,7 +204,7 @@ class User implements UserInterface
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts[] = $contact;
-            $contact->setUserId($this);
+            $contact->setUser($this);
         }
 
         return $this;
@@ -215,8 +215,8 @@ class User implements UserInterface
         if ($this->contacts->contains($contact)) {
             $this->contacts->removeElement($contact);
             // set the owning side to null (unless already changed)
-            if ($contact->getUserId() === $this) {
-                $contact->setUserId(null);
+            if ($contact->getUser() === $this) {
+                $contact->setUser(null);
             }
         }
 
