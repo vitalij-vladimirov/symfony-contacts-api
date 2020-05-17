@@ -78,7 +78,7 @@ class ContactController extends AbstractController
 
         if ($contact === null) {
             throw new NotFoundApiException(
-                'Contact not found.',
+                'Contact not found',
                 ContactErrorCode::CONTACT_NOT_FOUND
             );
         }
@@ -147,7 +147,7 @@ class ContactController extends AbstractController
 
         if ($contact === null) {
             throw new NotFoundApiException(
-                'Contact not found.',
+                'Contact not found',
                 ContactErrorCode::CONTACT_NOT_FOUND
             );
         }
@@ -196,7 +196,7 @@ class ContactController extends AbstractController
 
         if ($contact === null) {
             throw new NotFoundApiException(
-                'Contact not found.',
+                'Contact not found',
                 ContactErrorCode::CONTACT_NOT_FOUND
             );
         }
@@ -239,7 +239,7 @@ class ContactController extends AbstractController
 
         if ($contact === null) {
             throw new NotFoundApiException(
-                'Contact not found.',
+                'Contact not found',
                 ContactErrorCode::CONTACT_NOT_FOUND
             );
         }

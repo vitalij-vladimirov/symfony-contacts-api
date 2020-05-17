@@ -71,7 +71,7 @@ class ShareRequestManager
         $contact = $this->contactRepository->findOneByUserAndId($sender, $shareRequestData['contact_id']);
 
         if ($contact === null) {
-            throw new BadRequestException('Contact not found.');
+            throw new BadRequestException('Contact not found');
         }
 
         $shareRequestExists = $this->shareRequestRepository->findOneBySenderAndReceiverAndPhoneNr(
@@ -111,7 +111,7 @@ class ShareRequestManager
             if (isset($requestContent['name'])) {
                 $validation = $this->contactValidator->validateName($requestContent['name']);
 
-                if ($validation->count() !== 0) {
+                if ($validation->count() > 0) {
                     throw new ValidationApiException($validation);
                 }
             }
@@ -173,7 +173,7 @@ class ShareRequestManager
             );
         }
 
-        if ($validation->count() !== 0) {
+        if ($validation->count() > 0) {
             throw new ValidationApiException($validation);
         }
 
