@@ -24,4 +24,3 @@ RUN chmod +x /usr/bin/edit /usr/bin/symfony
 # Run APP
 COPY --chown=www-data:www-data app /app
 WORKDIR /app
-RUN if [ "$APP_ENV" = "development" ]; then composer install; else composer install --no-dev --optimize-autoloader; fi
