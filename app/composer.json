@@ -15,7 +15,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/polyfill-php74": "^1.16",
         "symfony/security-bundle": "5.0.*",
-        "symfony/security-guard": "5.0.*",
+        "symfony/security-guard": "5.2.*",
         "symfony/serializer": "5.0.*",
         "symfony/validator": "5.0.*",
         "symfony/yaml": "5.0.*",
